@@ -1,0 +1,20 @@
+local smeltery = peripheral.find("crafters_smeltery")
+local chest = peripheral.wrap("right")
+
+while true do
+
+  si = smeltery.getInventorySize()
+
+  SmelterySlot1 = smeltery.getStackInSlot(1)
+
+  print("Smelting "..tostring(SmelterySlot1["display_name"]))
+
+  ChestInventory = chest.getAllStacks()
+
+  ChestSlot1 = chest.getStackInSlot(1)
+
+  smeltery.pullItem("west", 1, 1, 1)
+
+  os.sleep(60)
+
+end
