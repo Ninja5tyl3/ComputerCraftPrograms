@@ -1,20 +1,86 @@
 local smeltery = peripheral.find("crafters_smeltery")
 local chest = peripheral.wrap("right")
 
+function compare(slot1, slot2)
+  if unexpected_condition then error() end
+  if slot1 == slot2 then
+    return true
+  else
+    return false
+  end
+end
+
+function checkdrain()
+  tank = smeltery.getInfo()
+  if tank["contents"] == nil then
+    return true
+  else
+    return false
+  end
+end
+
 while true do
-
-  si = smeltery.getInventorySize()
-
+  
   SmelterySlot1 = smeltery.getStackInSlot(1)
-
-  print("Smelting "..tostring(SmelterySlot1["display_name"]))
-
-  ChestInventory = chest.getAllStacks()
-
+  
+  Table = chest.getAllStacks()
+  
+  ChestSize = chest.getInventorySize()
+  
+  ChestInv = {}
+  
   ChestSlot1 = chest.getStackInSlot(1)
+  
+  if checkdrain() == true then
+    for i=1,ChestSize do
+      if SmelterySlot1 == nil and chest.getStackInSlot(i) ~= nil then
+        chest.pushItem("east", i, 64, 1)
+      elseif SmelterySlot1 == nil and chest.getStackInSlot(i) == nil then
+        print("Smeltery is Empty!  The Dwarves are being lazy!")
+      else
+        if compare(SmelterySlot1, chest.getStackInSlot(i)) then
+          print("Let's get to work!")
+          chest.pushItem("east", i, 1, 1)
+          return
+        else
+          print("Let's check the next slot!")
+        end
+      end
+    end
+  else os.sleep(60)
+  end
+  
+  --if compare(SmelterySlot1, ChestSlot1) then
+    --print("They are the same!")
+  --else
+    --print("They are not the same!  This is Madness!")
+  --end
+  
+  --for i=1,ChestSize do
+  
+    --table.insert(ChestInv, i, chest.getStackInSlot(i))
+    --write(tostring(chest.getStackInSlot(i)))
+   
+  --end  
+  
+  --if pcall(print(tostring(SmelterySlot1["display_name"]))) then
+   -- print(tostring(SmelterySlot1["display_name"]))
+  --else
+    --print("Smeltery Empty")
+  --end
+  
+  --for key,value in pairs(ChestInv) do
+  
+    --print(tostring(key)..": "..tostring(value))
+    
+  --end
+  
+  -- print(tostring(ChestInv["display_name"].Table))
 
-  smeltery.pullItem("west", 1, 1, 1)
-
-  os.sleep(60)
-
+  -- smeltery.pullItem("south", 2, 9, 1)
+  
+  -- chest.pushItem("east", 1, 9, 1)
+  
+  os.sleep(120)
+  
 end
