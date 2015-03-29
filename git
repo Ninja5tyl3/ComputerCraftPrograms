@@ -1,0 +1,49 @@
+function download(program)
+  link = "https://raw.githubusercontent.com/Ninja5tyl3/ComputerCraftPrograms/master/"..program
+  download = http.get(link)
+  handle = download.readAll()
+  download.close()
+  return handle
+end
+
+function install()
+  if args[2] ~= nil then
+    program = args[2]
+  else
+    print("Which program to install?")
+    program = read()
+  end
+  print("Installing "..program)
+  file = fs.open(program, "w")
+  handle = download(program)
+  file.write(handle)
+  file.close()
+end
+
+function update()
+  if args[2] ~= nil then
+   program = args[2]
+  else
+    print("Which program to update?")
+    program = read()
+  end
+  fs.delete(program)
+  print("Updating "..program)
+  file = fs.open(program, "w")
+  handle = download(program)
+  file.write(handle)
+  file.close()
+end
+
+args = {...}
+
+if args[1] == "install" then
+  install()
+elseif args[1] == "update" then
+  update()
+else
+  print("No Accepted Arguments Found")
+  print("Use install to install a new program")
+  print("Use update to update an existing program")
+  print("For help, look at where you got this script from")
+end
