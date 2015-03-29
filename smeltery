@@ -51,6 +51,11 @@ function smelterybool()
   return smelteryempty
 end
 while true do
+  args = {...}
+  debug = false
+  if args[0] == "debug"
+    debug = true
+  end
   SmelterySlot1 = smeltery.getStackInSlot(1)
   Table = chest.getAllStacks()
   ChestSize = chest.getInventorySize()
@@ -62,14 +67,18 @@ while true do
         chest.pushItem("east", i, 64, 1)
         smelteryempty = false
       elseif SmelterySlot1 == nil and chest.getStackInSlot(i) == nil then
-        print("Chest is Empty!  The Dwarves are being lazy!")
+        if debug == true then
+          print("Chest is Empty!  The Dwarves are being lazy!")
+        end
       else
         if compare(SmelterySlot1, chest.getStackInSlot(i)) then
           print("Let's get to work!")
           chest.pushItem("east", i, 1, 1)
           smelteryempty = false
         else
-          print("Let's check the next slot!")
+          if debug == true then
+            print("Let's check the next slot!")
+          end
         end
       end
     end
