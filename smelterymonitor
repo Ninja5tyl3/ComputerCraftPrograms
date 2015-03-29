@@ -16,7 +16,8 @@ function monitorloop()
   for i=0,#islot do
     if islot[i] ~= nil then
       smelting = islot[i].display_name
-    else smelting = "nothing"
+    elseif islot[i] == nil then
+      smelting = "nothing"
     end
   end
   tank = smeltery.getInfo()
