@@ -22,7 +22,7 @@ function detectDevice(DeviceName)
   return(DeviceSide)
 end
 
-function checkdrain()
+function checkdrainempty()
   tank = smeltery.getInfo()
   if tank["contents"] == nil then
     return true
@@ -31,29 +31,47 @@ function checkdrain()
   end
 end
 
+function smelterybool()
+  smelteryslotb = true -- true if empty
+  smelterytankb = true -- true if empty
+  smelteryempty = true -- true if empty
+  for i=1,9 do
+    if smeltery.getStackInSlot(i) == nil then
+      smelteryslotb = true
+    else
+      smelteryslotb = false
+    end
+  end
+  smelterytankb = checkdrainempty()
+  if smelteryslotb == true and smelterytankb == true then
+    smelteryempty = true
+  else
+    smelteryempty = false
+  end
+  return smelteryempty
+end
 while true do
   SmelterySlot1 = smeltery.getStackInSlot(1)
   Table = chest.getAllStacks()
   ChestSize = chest.getInventorySize()
   ChestInv = {}
   ChestSlot1 = chest.getStackInSlot(1)
-  if checkdrain() == true then
+  while smelteryempty == true do
     for i=1,ChestSize do
       if SmelterySlot1 == nil and chest.getStackInSlot(i) ~= nil then
         chest.pushItem("east", i, 64, 1)
+        smelteryempty = false
       elseif SmelterySlot1 == nil and chest.getStackInSlot(i) == nil then
-        print("Smeltery is Empty!  The Dwarves are being lazy!")
+        print("Chest is Empty!  The Dwarves are being lazy!")
       else
         if compare(SmelterySlot1, chest.getStackInSlot(i)) then
           print("Let's get to work!")
           chest.pushItem("east", i, 1, 1)
-          return
+          smelteryempty = false
         else
           print("Let's check the next slot!")
         end
       end
     end
-  else os.sleep(60)
   end
-  os.sleep(120)
 end
