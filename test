@@ -1,0 +1,62 @@
+ocal mon = peripheral.find("monitor")
+local net = peripheral.find("modem")
+local cell = peripheral.find("tile_thermalexpansion_cell_reinforced_name")
+
+local lower = 0.10
+local upper = 0.90
+
+local basic = 0
+local hardened = 0
+local reinforced = 0
+local resonant = 0
+
+monitor = "none"
+cell = "none"
+CellSide = "none"
+DynamoSide = "none"
+MonitorSide = "none"
+tecell = {
+  tile_thermalexpansion_cell_basic_name,
+  tile_thermalexpansion_cell_hardened_name,
+  tile_thermalexpansion_cell_reinforced_name,
+  tile_thermalexpansion_cell_resonant_name,
+}
+tedynamo = {
+  tile_thermalexpansion_dynamo_steam_name,
+  tile_thermalexpansion_dynamo_reactant_name,
+  tile_thermalexpansion_dynamo_compression_name,
+  tile_thermalexpansion_dynamo_magmatic_name,
+  tile_thermalexpansion_dynamo_enervation_name,
+}
+
+netside = net.getNamesRemote()
+
+function detectNetworkedDevice(DeviceName)
+  for k,v in pairs(netside) do
+    if peripheral.getType(v)==DeviceName then
+      DeviceSide = v
+      break
+    end
+  end
+  return(DeviceSide)
+end
+--for i=0,#tedynamo do
+--  DynamoSide = detectDevice(tedynamo[i])
+--end
+
+function detectDevice(DeviceName)
+  DeviceSide="none"
+  for k,v in pairs(redstone.getSides()) do
+   if peripheral.getType(v)==DeviceName then
+     DeviceSide = v
+     break
+   end
+  end
+  return(DeviceSide)
+end
+
+if pcall(CellSide = detectNetworkedDevice(tecell[0])) then
+  CellSide = detectNetworkedDevice(tecell[0])
+else
+  print("failed to detect")
+end
