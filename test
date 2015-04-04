@@ -1,10 +1,10 @@
-local mon = peripheral.find("monitor")
+--local mon = peripheral.find("monitor")
 local net = peripheral.find("modem")
 
-local monitor = "none"
-local CellSide = "none"
-local DynamoSide = "none"
-local MonitorSide = "none"
+local monitor = nil
+local CellSide = nil
+local DynamoSide = nil
+local peripheralList = peripheral.getNames()
 
 netside = net.getNamesRemote()
 
@@ -31,22 +31,20 @@ function detectDevice(DeviceName)
   return(DeviceSide)
 end
 
-monitor = detectDeveice(monitor)
+monitor = detectDevice(monitor)
 
-if monitor ~= nil then
-  mon = peripheral.wrap("monitor")
-  mon.clear()
-  mon.setCursorPos(1,1)
-  mon.write("It worked!")
-else
-  monitor = detectNetworkedDevice("monitor")
-  if monitor ~= nil then
-    mon = peripheral.find("monitor")
-    mon.clear()
-    mon.setCursorPos(1,1)
-    mon.write("It worked on network!")
+if MonitorSide~="none" then
+  monitor=peripheral.wrap(MonitorSide)
+  print ("Monitor on the " .. MonitorSide .. " connected.")
   else
-  print("It didn't work.")
-  print("At least there is cake")
+    for Index = 1, #peripheralList do
+      if string.find(peripheralList[Index], "monitor") then
+        monitor=peripheral.wrap(peripheralList[Index])
+        print ("Monitor on wired modem: "..peripheralList[Index].." connected.")
+      end
+    end --for
+    if monitor == "none" then
+      print ("Warning - No Monitor attached, continuing without.")
+    end
   end
 end
