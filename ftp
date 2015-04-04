@@ -9,8 +9,8 @@ os.loadAPI("utilities")
 
 function transmit(to, protocol, message)
   rednet.send(to, message, protocol)
-  reply = rednet.recieve(protocol, 60)
-  return reply[1]
+  a, reply = rednet.receive(protocol, 60)
+  return reply
 end
 
 
@@ -22,7 +22,7 @@ function send()
     program = read()
   end
   file = fs.open(program, "r")
-  fs.close()
+
   rednet.open(modem)
   rednet.host(protocol, "Up")
   to = rednet.lookup(protocol, "Down")
@@ -38,14 +38,15 @@ function send()
     end
   end
   rednet.close(modem)
+  file.close()
 end
 
 function receive()
   rednet.open(modem)
   rednet.host(protocol, "Down")
   to = rednet.lookup(protocol, "Up")
-  first = rednet.receive(protocol, 60)
-  if first[1] == "status" then
+  a, status = rednet.receive(protocol, 60)
+  if status[1] == "status" then
     program = transmit(to, protocol, "green")
     if program ~= nil then
       data = transmit(to, protocol, "ready")
