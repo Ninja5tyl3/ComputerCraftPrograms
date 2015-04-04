@@ -46,7 +46,7 @@ function receive()
   rednet.host(protocol, "Down")
   to = rednet.lookup(protocol, "Up")
   a, status = rednet.receive(protocol, 60)
-  if status[1] == "status" then
+  if status == "status" then
     program = transmit(to, protocol, "green")
     if program ~= nil then
       data = transmit(to, protocol, "ready")
