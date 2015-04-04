@@ -1,35 +1,14 @@
-ocal mon = peripheral.find("monitor")
+local mon = peripheral.find("monitor")
 local net = peripheral.find("modem")
-local cell = peripheral.find("tile_thermalexpansion_cell_reinforced_name")
 
-local lower = 0.10
-local upper = 0.90
-
-local basic = 0
-local hardened = 0
-local reinforced = 0
-local resonant = 0
-
-monitor = "none"
-cell = "none"
-CellSide = "none"
-DynamoSide = "none"
-MonitorSide = "none"
-tecell = {
-  tile_thermalexpansion_cell_basic_name,
-  tile_thermalexpansion_cell_hardened_name,
-  tile_thermalexpansion_cell_reinforced_name,
-  tile_thermalexpansion_cell_resonant_name,
-}
-tedynamo = {
-  tile_thermalexpansion_dynamo_steam_name,
-  tile_thermalexpansion_dynamo_reactant_name,
-  tile_thermalexpansion_dynamo_compression_name,
-  tile_thermalexpansion_dynamo_magmatic_name,
-  tile_thermalexpansion_dynamo_enervation_name,
-}
+local monitor = "none"
+local CellSide = "none"
+local DynamoSide = "none"
+local MonitorSide = "none"
 
 netside = net.getNamesRemote()
+
+netlist = {}
 
 function detectNetworkedDevice(DeviceName)
   for k,v in pairs(netside) do
@@ -40,9 +19,6 @@ function detectNetworkedDevice(DeviceName)
   end
   return(DeviceSide)
 end
---for i=0,#tedynamo do
---  DynamoSide = detectDevice(tedynamo[i])
---end
 
 function detectDevice(DeviceName)
   DeviceSide="none"
@@ -55,8 +31,22 @@ function detectDevice(DeviceName)
   return(DeviceSide)
 end
 
-if pcall(CellSide = detectNetworkedDevice(tecell[0])) then
-  CellSide = detectNetworkedDevice(tecell[0])
+monitor = detectDeveice(monitor)
+
+if monitor ~= nil then
+  mon = peripheral.wrap("monitor")
+  mon.clear()
+  mon.setCursorPos(1,1)
+  mon.write("It worked!")
 else
-  print("failed to detect")
+  monitor = detectNetworkedDevice("monitor")
+  if monitor ~= nil then
+    mon = peripheral.find("monitor")
+    mon.clear()
+    mon.setCursorPos(1,1)
+    mon.write("It worked on network!")
+  else
+  print("It didn't work.")
+  print("At least there is cake")
+  end
 end
