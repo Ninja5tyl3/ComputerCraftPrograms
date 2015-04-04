@@ -36,15 +36,14 @@ monitor = detectDevice(monitor)
 if MonitorSide~="none" then
   monitor=peripheral.wrap(MonitorSide)
   print ("Monitor on the " .. MonitorSide .. " connected.")
-  else
-    for Index = 1, #peripheralList do
-      if string.find(peripheralList[Index], "monitor") then
-        monitor=peripheral.wrap(peripheralList[Index])
-        print ("Monitor on wired modem: "..peripheralList[Index].." connected.")
-      end
-    end --for
-    if monitor == "none" then
-      print ("Warning - No Monitor attached, continuing without.")
+else
+  for Index = 1, #peripheralList do
+    if string.find(peripheralList[Index], "monitor") then
+      monitor=peripheral.wrap(peripheralList[Index])
+      print ("Monitor on wired modem: "..peripheralList[Index].." connected.")
     end
+  end --for
+  if monitor == "none" then
+    print ("Warning - No Monitor attached, continuing without.")
   end
 end
