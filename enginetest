@@ -1,0 +1,157 @@
+--local mon = peripheral.find("monitor")
+local net = peripheral.find("modem")
+local cell = peripheral.find("tile_thermalexpansion_cell_resonant_name")
+local frequency = 0.1
+local enginestatus = "off"
+local bExit = false
+local timerTable = os.startTimer(1)
+
+local lower = 0.10
+local upper = 0.90
+
+local basic = 0
+local hardened = 0
+local reinforced = 0
+local resonant = 0
+
+-- load API
+os.loadAPI("utilities")
+
+monitor = "none"
+cell = "none"
+CellSide = "none"
+DynamoSide = "none"
+MonitorSide = "none"
+
+CellSide = detectDevice("tile_thermalexpasnion_cell_resonant_name")
+
+--for i=0,#tedynamo do
+--  DynamoSide = detectDevice(tedynamo[i])
+--end
+
+function detectDevice(DeviceName)
+  DeviceSide="none"
+  for k,v in pairs(redstone.getSides()) do
+   if peripheral.getType(v)==DeviceName then
+     DeviceSide = v
+     break
+   end
+  end
+  return(DeviceSide)
+end
+
+monitor = detectDevice("monitor")
+
+
+
+if CellSide~="none" then
+  cell=peripheral.wrap(CellSide)
+  print ("TE Energy cell on the " .. CellSide .. " connected.")
+  else
+
+  end
+end
+
+function engines(fill)
+  if fill > upper then
+    return False
+  elseif fill < lower then
+    return True
+  end
+end
+
+function levels()
+  now = cell.getEnergyStored()
+  max = cell.getEnergyStored()
+  fill = (now/max)
+  return fill
+end
+
+function control()
+  or = redstone.getInput("front")
+  if or then
+    restone.setOutput("back", false)
+  else
+
+    --Get storage values
+    eNow = cell.getEnergyStored()
+    eMax = cell.getMaxEnergyStored()
+
+    --Compute ratio
+    fill = (eNow / eMax)
+
+    if fill > upper then
+      --energylevel is over upper level, turning redstone signal off
+      redstone.setOutput("back", false)
+      enginestatus = "off"
+    elseif fill < lower then
+      --energy level is below lower limit, turning redstone signal on
+      redstone.setOutput("back", true)
+      enginestatus = "on"
+    end
+  end
+end
+
+function statusloop()
+  engine = detectSide("tile_thermalexpansion_dynamo_magamatic_name")
+  enginebool = engine.hasWork()
+  if enginebool == True
+    enginestatus = "on"
+  else
+    enginestatus = "off"
+  end
+  net.transmit(4, 3, enginestatus)
+end
+
+function override(status)
+  if status then
+    redstone.setOuput("left", false)
+    return
+  else
+    redstone.setOutput("left", true)
+    return
+  end
+end
+
+
+function status()
+  net.open(3)
+  net.open(4)
+  for sEvent, modemSide, senderChannel, replyChannel, message, senderDistance = os.pullEvent("modem_message")
+    if sEvent == "timer" and a == timerTable then
+    timerTable = os.startTimer(1)
+    statusloop()
+  elseif sEvent == "modem_message" then
+    if message == "on" then
+      status = true
+      override(status)
+    elseif message == "off" then
+      status = false
+      override(status)
+    end
+  end
+  if bExit then
+    break
+  end
+  net.closeAll()
+end
+
+function mainLoop()
+
+  args = {...}
+
+  if args[1] == "control" then
+    control()
+  elseif args[1] == "status" then
+    status()
+  elseif args[1] == "statusandcontrol"
+    statusandcontrol()
+  else
+    print("No Accepted Arguments Found")
+    print("Use control for control with no network listening")
+    print("Use status for network listening and reporting")
+    print("status requires a control computer to work properly")
+    print("Use statusandcontrol if you want to use only one computer")
+    print("For help, look at where you got this script from")
+  end
+end
