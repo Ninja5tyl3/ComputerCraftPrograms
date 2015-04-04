@@ -1,0 +1,11 @@
+local mon = peripheral.find("monitor")
+local net = peripheral.find("modem")
+local comp = peripheral.find("computer")
+local channel = 1
+--local event, modemSide, senderChannel, replyChannel, message, senderDistance = os.pullEvent("modem_message")
+
+net.open(1)
+net.open(2)
+
+print("I am sending a message")
+net.transmit(1, 2, "Hello!")

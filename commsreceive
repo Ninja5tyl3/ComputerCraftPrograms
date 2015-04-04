@@ -1,0 +1,11 @@
+local net = peripheral.find("modem")
+net.open(1)
+net.open(2)
+local event, modemSide, senderChannel, replyChannel, message, senderDistance = os.pullEvent("modem_message")
+
+print("I just received a message from: "..senderChannel)
+print("The modem receiving this is located on the "..modemSide.." side")
+print("The message was: "..message)
+print("The sender is: "..senderDistance.." blocks away from me.")
+print("I will reply on: "..replyChannel)
+net.transmit(2, 1, "Hello, I received your message!")
