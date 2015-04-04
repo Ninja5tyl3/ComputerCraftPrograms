@@ -1,0 +1,77 @@
+local net = peripheral.find("modem")
+local protocol = "ftp"
+local modem = "none"
+local utp = 9
+local tcp = 10
+
+function transmit(to, protocol, message)
+  rednet.send(to, message, protocol)
+  reply = rednet.recieve(protocol, 60)
+  return reply[1]
+end
+
+
+function send()
+  if args[2] ~= nil then
+    program = args[2]
+  else
+    print("Which program or file to send?")
+    program = read()
+  end
+  file = fs.open(program, "r")
+  fs.close()
+  rednet.open(modem)
+  rednet.host(protocol, "Up")
+  to = rednet.lookup(protocol, "Down")
+  status = transmit(to, protocol, "status")
+  if status == "green" then
+    ready = transmit(to, protocol, program)
+    if ready == "ready" then
+      final = transmit(to, protocol, file)
+        if final == "received" then
+          rednet.send(to, "closing", protocol)
+          rednet.unhost(protocol, "Up")
+        end
+      end
+    end
+  end
+  rednet.close(modem)
+end
+
+function receive()
+  rednet.open(modem)
+  rednet.host(protocol, "Down")
+  to = rednet.lookup(protocol, "Up")
+  first = rednet.receive(protocol, 60)
+  if first[1] == "status" then
+    program = transmit(to, protocol, "green")
+    if program ~= nil then
+      data = transmit(to, protocol, "ready")
+      if data ~= nil then
+        final = transmit(to, protocol, "received")
+        if final == "closing" then
+          rednet.unhost(protocol, "Down")
+        end
+      end
+    end
+  end
+  rednet.close(modem)
+  file = fs.open(program, "w")
+  file.write(data)
+  file.close()
+end
+
+modem = detectDevice("modem")
+
+args = {...}
+
+if args[1] == "send" then
+  send()
+elseif args[1] == "receive" then
+  receive()
+else
+  print("No Accepted Arguments Found")
+  print("Use send to send a file or program to a listening computer")
+  print("Use receive to listen for a file or program")
+  print("For help, look at where you got this script from")
+end
