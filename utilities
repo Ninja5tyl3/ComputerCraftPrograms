@@ -1,0 +1,24 @@
+-- Handy functions for all your programs
+-- Put together by Ninja_5tyl3
+
+function detectSide(DeviceName)
+  DeviceSide = "none"
+  for Index = 1, #sides do
+    if peripheral.getType(sides[Index])==DeviceName then
+      DeviceSide = sides[Index]
+      break
+    end
+  end
+  return DeviceSide
+end
+
+function detectDevice(DeviceName)
+  DeviceSide="none"
+  for i=0,5 do
+   if peripheral.getType(v)==DeviceName then
+     DeviceSide = v
+     break
+   end
+  end
+  return DeviceSide
+end
