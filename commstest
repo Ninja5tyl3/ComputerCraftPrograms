@@ -2,7 +2,6 @@ local mon = peripheral.find("monitor")
 local net = peripheral.find("modem")
 local comp = peripheral.find("computer")
 local channel = 1
-local event, modemSide, senderChannel, replyChannel, message, senderDistance = os.pullEvent("modem_message")
 
 net.open(1)
 net.open(2)
@@ -10,8 +9,11 @@ net.open(2)
 print("I am sending a message")
 net.transmit(1, 2, "Hello!")
 
+local event, modemSide, senderChannel, replyChannel, message, senderDistance = os.pullEvent("modem_message")
+
 print("I just received a message from: "..senderChannel)
 print("The modem receiving this is located on the "..modemSide.." side")
 print("The message was: "..message)
 print("The sender is: "..senderDistance.." blocks away from me.")
 print("If I need to reply, I would reply on: "..replyChannel)
+print("This program is being written and tested by Ninja_5tyl3")
