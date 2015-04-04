@@ -1,9 +1,10 @@
 --local mon = peripheral.find("monitor")
 local net = peripheral.find("modem")
+local sides = ["top", "right", "left", "front", "back", "bottom"]
 
-local monitor = nil
-local CellSide = nil
-local DynamoSide = nil
+local monitor =  "none"
+local CellSide =  "none"
+local DynamoSide =  "none"
 local peripheralList = peripheral.getNames()
 
 netside = net.getNamesRemote()
@@ -20,20 +21,31 @@ function detectNetworkedDevice(DeviceName)
   return(DeviceSide)
 end
 
+function detectSide(DeviceName)
+  DeviceSide = "none"
+  for Index = 1, #sides do
+    if peripheral.getType(sides[Index])==DeviceName then
+      DeviceSide = sides[Index]
+      break
+    end
+  end
+  return DeviceSide
+end
+
 function detectDevice(DeviceName)
   DeviceSide="none"
-  for k,v in pairs(redstone.getSides()) do
+  for i=0,5 do
    if peripheral.getType(v)==DeviceName then
      DeviceSide = v
      break
    end
   end
-  return(DeviceSide)
+  return DeviceSide
 end
 
-monitor = detectDevice(monitor)
+monitor = detectSide(monitor)
 
-if MonitorSide~="none" then
+if MonitorSide~= "none" then
   monitor=peripheral.wrap(MonitorSide)
   print ("Monitor on the " .. MonitorSide .. " connected.")
 else
