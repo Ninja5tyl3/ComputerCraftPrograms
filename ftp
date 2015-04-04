@@ -1,8 +1,11 @@
 local net = peripheral.find("modem")
 local protocol = "ftp"
-local modem = "none"
+local modem = "back"
 local utp = 9
 local tcp = 10
+
+-- load API
+os.loadAPI("utilities")
 
 function transmit(to, protocol, message)
   rednet.send(to, message, protocol)
@@ -28,10 +31,9 @@ function send()
     ready = transmit(to, protocol, program)
     if ready == "ready" then
       final = transmit(to, protocol, file)
-        if final == "received" then
-          rednet.send(to, "closing", protocol)
-          rednet.unhost(protocol, "Up")
-        end
+      if final == "received" then
+        rednet.send(to, "closing", protocol)
+        rednet.unhost(protocol, "Up")
       end
     end
   end
@@ -61,7 +63,7 @@ function receive()
   file.close()
 end
 
-modem = detectDevice("modem")
+--modem = detectDevice("modem")
 
 args = {...}
 
