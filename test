@@ -1,6 +1,8 @@
 --local mon = peripheral.find("monitor")
 local net = peripheral.find("modem")
-local sides = ["top", "right", "left", "front", "back", "bottom"]
+local sides = {"top", "right", "left", "front", "back", "bottom"}
+
+
 
 local monitor =  "none"
 local CellSide =  "none"
@@ -12,49 +14,24 @@ netside = net.getNamesRemote()
 netlist = {}
 
 function detectNetworkedDevice(DeviceName)
-  for k,v in pairs(netside) do
-    if peripheral.getType(v)==DeviceName then
-      DeviceSide = v
-      break
-    end
-  end
-  return(DeviceSide)
-end
-
-function detectSide(DeviceName)
-  DeviceSide = "none"
-  for Index = 1, #sides do
-    if peripheral.getType(sides[Index])==DeviceName then
-      DeviceSide = sides[Index]
-      break
-    end
-  end
-  return DeviceSide
-end
-
-function detectDevice(DeviceName)
-  DeviceSide="none"
-  for i=0,5 do
-   if peripheral.getType(v)==DeviceName then
-     DeviceSide = v
-     break
-   end
-  end
-  return DeviceSide
-end
-
-monitor = detectSide(monitor)
-
-if MonitorSide~= "none" then
-  monitor=peripheral.wrap(MonitorSide)
-  print ("Monitor on the " .. MonitorSide .. " connected.")
-else
   for Index = 1, #peripheralList do
-    if string.find(peripheralList[Index], "monitor") then
-      monitor=peripheral.wrap(peripheralList[Index])
-      print ("Monitor on wired modem: "..peripheralList[Index].." connected.")
+    if string.find(peripheralList[Index], DeviceName) then
+      DeviceLoc = peripheralList[Index]
     end
   end --for
+  return DeviceLoc
+end
+
+
+monitor = detectSide("monitor")
+print(monitor)
+if monitor~= "none" then
+  monitor=peripheral.wrap(monitor)
+  print ("Monitor on the " .. monitor .. " connected.")
+else
+  monitor = detectNetworkDevice("monitor")
+  if monitor ~= "none" then
+    print("I will work on this next")
   if monitor == "none" then
     print ("Warning - No Monitor attached, continuing without.")
   end
